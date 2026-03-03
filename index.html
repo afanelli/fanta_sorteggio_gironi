@@ -94,10 +94,17 @@ async function startDraw() {
 
         await sleep(1500);
 
-        let assignTo;
+        /*let assignTo;
         if (countGiochisti === 4) assignTo = "RISULTATISTI";
         else if (countRisultatisti === 4) assignTo = "GIOCHISTI";
-        else assignTo = Math.random() < 0.5 ? "GIOCHISTI" : "RISULTATISTI";
+        else assignTo = Math.random() < 0.5 ? "GIOCHISTI" : "RISULTATISTI";*/
+
+        let assignTo;
+        if (i % 2 === 0) { // indice pari → Giochisti
+            assignTo = "GIOCHISTI";
+        } else {           // indice dispari → Risultatisti
+            assignTo = "RISULTATISTI";
+        }
 
         overlayGroup.textContent = "→ " + assignTo;
         overlay.classList.add("reveal");
