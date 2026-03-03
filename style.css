@@ -1,0 +1,120 @@
+/* style.css */
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: linear-gradient(135deg, #141e30, #243b55);
+    color: white;
+    padding: 30px;
+}
+
+h1 { margin-bottom: 10px; }
+
+button {
+    margin-top: 20px;
+    padding: 12px 25px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #ffcc00;
+    color: black;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+
+button:hover { transform: scale(1.1); }
+
+button:disabled {
+    background: grey;
+    cursor: not-allowed;
+}
+
+.section {
+    margin-top: 30px;
+}
+
+.teams-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.team {
+    background: rgba(255,255,255,0.15);
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.4s ease;
+}
+
+.extracting {
+    background: #ffcc00 !important;
+    color: black;
+    transform: scale(1.2);
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 30px;
+}
+
+.girone {
+    background: rgba(255,255,255,0.1);
+    padding: 20px;
+    border-radius: 15px;
+    width: 220px;
+    min-height: 250px;
+}
+
+.girone h2 { margin-top: 0; }
+
+.fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* OVERLAY CERIMONIA */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle, rgba(0,0,0,0.9) 40%, black 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 42px;
+    font-weight: bold;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    z-index: 1000;
+}
+
+.overlay.show {
+    opacity: 1;
+}
+
+.overlay .team-name {
+    font-size: 50px;
+    margin-bottom: 20px;
+}
+
+.overlay .group-name {
+    font-size: 28px;
+    letter-spacing: 3px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease;
+}
+
+.overlay.reveal .group-name {
+    opacity: 1;
+    transform: translateY(0);
+}
