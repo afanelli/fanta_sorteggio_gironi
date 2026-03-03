@@ -136,14 +136,13 @@ button:disabled { background: grey; cursor: not-allowed; }
 .final-text {
     position: fixed;
     inset: 0;
-    display: flex;
+    display: none; /* <-- nascosta inizialmente */
     justify-content: center;
     align-items: center;
     font-size: 48px;
     font-weight: bold;
     color: gold;
     text-shadow: 0 0 20px white;
-    opacity: 0;
     pointer-events: none;
     z-index: 3000;
     animation: finalText 2s forwards;
