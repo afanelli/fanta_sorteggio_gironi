@@ -85,6 +85,45 @@ button:disabled {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* OVERLAY CERIMONIA */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle, rgba(0,0,0,0.9) 40%, black 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 42px;
+    font-weight: bold;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    z-index: 1000;
+}
+
+.overlay.show {
+    opacity: 1;
+}
+
+.overlay .team-name {
+    font-size: 50px;
+    margin-bottom: 20px;
+}
+
+.overlay .group-name {
+    font-size: 28px;
+    letter-spacing: 3px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease;
+}
+
+.overlay.reveal .group-name {
+    opacity: 1;
+    transform: translateY(0);
+}
 </style>
 </head>
 
@@ -106,6 +145,12 @@ button:disabled {
     <div class="girone" id="risultatisti">
         <h2>🔥 Risultatisti</h2>
     </div>
+</div>
+
+<!-- OVERLAY TEATRALE -->
+<div class="overlay" id="ceremonyOverlay">
+    <div class="team-name" id="overlayTeam"></div>
+    <div class="group-name" id="overlayGroup"></div>
 </div>
 
 <script>
@@ -148,39 +193,65 @@ async function startDraw() {
 
     button.disabled = true;
 
-    // Reset gironi
     giochistiDiv.innerHTML = "<h2>⚽ Giochisti</h2>";
     risultatistiDiv.innerHTML = "<h2>🔥 Risultatisti</h2>";
 
     const shuffled = [...teams];
     shuffle(shuffled);
 
+    let countGiochisti = 0;
+    let countRisultatisti = 0;
+
+    const overlay = document.getElementById("ceremonyOverlay");
+    const overlayTeam = document.getElementById("overlayTeam");
+    const overlayGroup = document.getElementById("overlayGroup");
+
     const teamElements = document.querySelectorAll(".team");
 
     for (let i = 0; i < shuffled.length; i++) {
 
         const teamName = shuffled[i];
-
         const currentElement = [...teamElements].find(el => el.textContent === teamName);
 
-        currentElement.classList.add("extracting");
+        // Mostra overlay
+        overlayTeam.textContent = teamName;
+        overlayGroup.textContent = "";
+        overlay.classList.add("show");
+        overlay.classList.remove("reveal");
 
-        await sleep(1000);
+        await sleep(1500); // suspense
 
-        currentElement.classList.remove("extracting");
-        currentElement.style.opacity = "0.3";
+        // Decidi girone
+        let assignTo;
+        if (countGiochisti === 4) {
+            assignTo = "RISULTATISTI";
+        } else if (countRisultatisti === 4) {
+            assignTo = "GIOCHISTI";
+        } else {
+            assignTo = Math.random() < 0.5 ? "GIOCHISTI" : "RISULTATISTI";
+        }
+
+        overlayGroup.textContent = "→ " + assignTo;
+        overlay.classList.add("reveal");
+
+        await sleep(1500); // reveal
+
+        overlay.classList.remove("show");
 
         const newDiv = document.createElement("div");
         newDiv.classList.add("team", "fade-in");
         newDiv.textContent = teamName;
 
-        if (i < 4) {
+        if (assignTo === "GIOCHISTI") {
             giochistiDiv.appendChild(newDiv);
+            countGiochisti++;
         } else {
             risultatistiDiv.appendChild(newDiv);
+            countRisultatisti++;
         }
 
-        await sleep(500);
+        currentElement.style.opacity = "0.3"; // sfuma il nome originale
+        await sleep(600);
     }
 }
 </script>
