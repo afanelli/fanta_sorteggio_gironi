@@ -1,11 +1,13 @@
 /* style.css */
 
+/* --- Corpo principale --- */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
     background: linear-gradient(135deg, #141e30, #243b55);
     color: white;
     padding: 30px;
+    overflow-x: hidden;
 }
 
 h1 { margin-bottom: 10px; }
@@ -24,15 +26,9 @@ button {
 }
 
 button:hover { transform: scale(1.1); }
+button:disabled { background: grey; cursor: not-allowed; }
 
-button:disabled {
-    background: grey;
-    cursor: not-allowed;
-}
-
-.section {
-    margin-top: 30px;
-}
+.section { margin-top: 30px; }
 
 .teams-list {
     display: flex;
@@ -46,12 +42,6 @@ button:disabled {
     padding: 8px 12px;
     border-radius: 8px;
     transition: all 0.4s ease;
-}
-
-.extracting {
-    background: #ffcc00 !important;
-    color: black;
-    transform: scale(1.2);
 }
 
 .container {
@@ -80,7 +70,7 @@ button:disabled {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* OVERLAY CERIMONIA */
+/* --- Overlay Cerimonia --- */
 .overlay {
     position: fixed;
     inset: 0;
@@ -97,15 +87,8 @@ button:disabled {
     z-index: 1000;
 }
 
-.overlay.show {
-    opacity: 1;
-}
-
-.overlay .team-name {
-    font-size: 50px;
-    margin-bottom: 20px;
-}
-
+.overlay.show { opacity: 1; }
+.overlay .team-name { font-size: 50px; margin-bottom: 20px; }
 .overlay .group-name {
     font-size: 28px;
     letter-spacing: 3px;
@@ -113,8 +96,61 @@ button:disabled {
     transform: translateY(20px);
     transition: all 0.6s ease;
 }
+.overlay.reveal .group-name { opacity: 1; transform: translateY(0); }
 
-.overlay.reveal .group-name {
-    opacity: 1;
-    transform: translateY(0);
+/* --- Pallina animata --- */
+.ball {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: #ffcc00;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    color: black;
+    pointer-events: none;
+    z-index: 2000;
+    transition: transform 1s ease-in-out, opacity 0.5s ease;
+}
+
+/* --- Particelle oro --- */
+.particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: gold;
+    border-radius: 50%;
+    opacity: 0.8;
+    pointer-events: none;
+    animation: fly 1s forwards;
+}
+
+@keyframes fly {
+    from { transform: translate(0,0) scale(1); opacity: 1; }
+    to { transform: translate(var(--x), var(--y)) scale(0.3); opacity: 0; }
+}
+
+/* --- Scritta finale --- */
+.final-text {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 48px;
+    font-weight: bold;
+    color: gold;
+    text-shadow: 0 0 20px white;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 3000;
+    animation: finalText 2s forwards;
+}
+
+@keyframes finalText {
+    0% { opacity: 0; transform: scale(0.5) rotate(-10deg); }
+    50% { opacity: 1; transform: scale(1.2) rotate(5deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
 }
