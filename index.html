@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sorteggio Gironi</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: white;
+    padding: 30px;
+}
+
+h1 {
+    margin-bottom: 10px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 30px;
+}
+
+.girone {
+    background: rgba(255,255,255,0.1);
+    padding: 20px;
+    border-radius: 15px;
+    width: 220px;
+    min-height: 250px;
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease;
+}
+
+.girone h2 {
+    margin-top: 0;
+}
+
+.team {
+    background: rgba(255,255,255,0.2);
+    margin: 8px 0;
+    padding: 8px;
+    border-radius: 8px;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+button {
+    margin-top: 30px;
+    padding: 12px 25px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #ffcc00;
+    color: black;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+
+button:hover {
+    transform: scale(1.1);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.shuffle {
+    animation: shake 0.1s infinite alternate;
+}
+
+@keyframes shake {
+    from { transform: rotate(-1deg); }
+    to { transform: rotate(1deg); }
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎲 Sorteggio Gironi</h1>
+<p>Clicca per estrarre le squadre!</p>
+
+<button onclick="drawTeams()">Estrai Gironi</button>
+
+<div class="container">
+    <div class="girone" id="giochisti">
+        <h2>⚽ Giochisti</h2>
+    </div>
+    <div class="girone" id="risultatisti">
+        <h2>🔥 Risultatisti</h2>
+    </div>
+</div>
+
+<script>
+const teams = [
+    "hogiavinto",
+    "morteam",
+    "#finoallafinale",
+    "hertha vernello",
+    "kucos fellas",
+    "smitolo",
+    "Ahanor Londo",
+    "Ribaltone"
+];
+
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+function drawTeams() {
+    const giochistiDiv = document.getElementById("giochisti");
+    const risultatistiDiv = document.getElementById("risultatisti");
+
+    // reset
+    giochistiDiv.innerHTML = "<h2>⚽ Giochisti</h2>";
+    risultatistiDiv.innerHTML = "<h2>🔥 Risultatisti</h2>";
+
+    // animazione shuffle
+    document.body.classList.add("shuffle");
+
+    setTimeout(() => {
+        document.body.classList.remove("shuffle");
+
+        const shuffled = [...teams];
+        shuffle(shuffled);
+
+        const group1 = shuffled.slice(0,4);
+        const group2 = shuffled.slice(4,8);
+
+        group1.forEach(team => {
+            const div = document.createElement("div");
+            div.classList.add("team");
+            div.textContent = team;
+            giochistiDiv.appendChild(div);
+        });
+
+        group2.forEach(team => {
+            const div = document.createElement("div");
+            div.classList.add("team");
+            div.textContent = team;
+            risultatistiDiv.appendChild(div);
+        });
+
+    }, 1500);
+}
+</script>
+
+</body>
+</html>
