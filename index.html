@@ -6,7 +6,6 @@
 <title>Sorteggio Gironi Fantaltech</title>
 <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
 <h1>🎲 Sorteggio Ufficiale Fantaltech</h1>
@@ -32,6 +31,8 @@
     <div class="group-name" id="overlayGroup"></div>
 </div>
 
+<div id="finalText" class="final-text">GIRONI COMPLETI FANTALTECH 🎉</div>
+
 <script>
 const teams = [
     "hogiavinto",
@@ -48,6 +49,10 @@ const teamsContainer = document.getElementById("teamsContainer");
 const giochistiDiv = document.getElementById("giochisti");
 const risultatistiDiv = document.getElementById("risultatisti");
 const button = document.getElementById("drawBtn");
+const overlay = document.getElementById("ceremonyOverlay");
+const overlayTeam = document.getElementById("overlayTeam");
+const overlayGroup = document.getElementById("overlayGroup");
+const finalText = document.getElementById("finalText");
 
 teams.forEach(team => {
     const div = document.createElement("div");
@@ -65,9 +70,23 @@ function shuffle(array) {
 
 function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
+function createParticles(x, y) {
+    for(let i=0;i<20;i++){
+        const p = document.createElement("div");
+        p.className = "particle";
+        const angle = Math.random()*2*Math.PI;
+        const distance = 50 + Math.random()*50;
+        p.style.left = `${x}px`;
+        p.style.top = `${y}px`;
+        p.style.setProperty('--x', `${Math.cos(angle)*distance}px`);
+        p.style.setProperty('--y', `${Math.sin(angle)*distance}px`);
+        document.body.appendChild(p);
+        setTimeout(()=>p.remove(), 1000);
+    }
+}
+
 async function startDraw() {
     button.disabled = true;
-
     giochistiDiv.innerHTML = "<h2>⚽ Giochisti</h2>";
     risultatistiDiv.innerHTML = "<h2>🔥 Risultatisti</h2>";
 
@@ -76,11 +95,6 @@ async function startDraw() {
 
     let countGiochisti = 0;
     let countRisultatisti = 0;
-
-    const overlay = document.getElementById("ceremonyOverlay");
-    const overlayTeam = document.getElementById("overlayTeam");
-    const overlayGroup = document.getElementById("overlayGroup");
-
     const teamElements = document.querySelectorAll(".team");
 
     for (let i = 0; i < shuffled.length; i++) {
@@ -92,6 +106,16 @@ async function startDraw() {
         overlay.classList.add("show");
         overlay.classList.remove("reveal");
 
+        // Pallina volante
+        const ball = document.createElement("div");
+        ball.classList.add("ball");
+        ball.textContent = teamName;
+        document.body.appendChild(ball);
+
+        const rect = currentElement.getBoundingClientRect();
+        ball.style.left = `${rect.left + rect.width/2 - 25}px`;
+        ball.style.top = `${rect.top + rect.height/2 - 25}px`;
+
         await sleep(1500);
 
         let assignTo;
@@ -101,26 +125,35 @@ async function startDraw() {
 
         overlayGroup.textContent = "→ " + assignTo;
         overlay.classList.add("reveal");
-
         await sleep(1500);
 
-        overlay.classList.remove("show");
+        // Animazione pallina verso girone
+        const targetDiv = assignTo === "GIOCHISTI" ? giochistiDiv : risultatistiDiv;
+        const targetRect = targetDiv.getBoundingClientRect();
+        ball.style.transform = `translate(${targetRect.left - rect.left + 80}px, ${targetRect.top - rect.top + 50}px)`;
+        await sleep(1200);
+        ball.remove();
 
+        // Aggiunge squadra nel girone
         const newDiv = document.createElement("div");
         newDiv.classList.add("team", "fade-in");
         newDiv.textContent = teamName;
-
-        if (assignTo === "GIOCHISTI") {
-            giochistiDiv.appendChild(newDiv);
-            countGiochisti++;
-        } else {
-            risultatistiDiv.appendChild(newDiv);
-            countRisultatisti++;
-        }
+        if(assignTo==="GIOCHISTI"){ giochistiDiv.appendChild(newDiv); countGiochisti++; }
+        else { risultatistiDiv.appendChild(newDiv); countRisultatisti++; }
 
         currentElement.style.opacity = "0.3";
-        await sleep(600);
+
+        // Particelle dorate
+        const targetCenterX = targetRect.left + targetRect.width/2;
+        const targetCenterY = targetRect.top + targetRect.height/2;
+        createParticles(targetCenterX, targetCenterY);
+
+        overlay.classList.remove("show");
+        await sleep(500);
     }
+
+    // Mostra scritta finale epica
+    finalText.style.opacity = "1";
 }
 </script>
 
