@@ -153,7 +153,12 @@ async function startDraw() {
     }
 
     // Mostra scritta finale epica
-    finalText.style.opacity = "1";
+    // Mostra scritta finale epica
+    finalText.style.display = "flex"; // rende visibile
+    // Riavvia animazione
+    finalText.style.animation = "none"; 
+    void finalText.offsetWidth; // trigger reflow
+    finalText.style.animation = "finalText 2s forwards";
 }
 </script>
 
